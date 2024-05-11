@@ -1,6 +1,6 @@
 version: '3'
 services:
   meu-servico:
-    image: convert-temp:1.0
+    image: rafallltm/kubedev-convert-temp:1.0
     ports:
       - "8080:8080"
