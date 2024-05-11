@@ -1,18 +1,33 @@
-# Define base image
-FROM node:20-alpine
+# Use uma versão específica da imagem base para o estágio de construção
+FROM node:14-alpine AS builder
 
-# Set working directory
+# Defina o diretório de trabalho
 WORKDIR /app
 
-# Copy source code
+# Copie os arquivos de dependências e instale as dependências
+COPY package.json package-lock.json ./
+RUN npm ci --quiet --only=production && \
+    npm cache clean --force
+
+# Copie o restante do código-fonte
 COPY . .
 
-# Install dependencies
-RUN npm install
+# Compile seu aplicativo, se necessário
+RUN npm run build
 
-# Expose porta 8080
+# Etapa de construção final
+FROM node:14-alpine
+
+# Defina um usuário não-root
+USER node
+
+WORKDIR /app
+
+# Copie os arquivos necessários do estágio de compilação
+COPY --from=builder /app ./
+
+# Exponha a porta do seu aplicativo
 EXPOSE 8080
 
-# Comando para executar a aplicação quando o contêiner for iniciado
+# Comando para iniciar o aplicativo
 CMD ["node", "/app/server.js"]
-
