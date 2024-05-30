@@ -1,6 +1,7 @@
 version: '3'
 services:
-  meu-servico:
-    image: rafallltm/kubedev-convert-temp:1.0
+  app:
+    image: rafallltm/conversao-temperatura:1.0
     ports:
       - "8080:8080"
+    restart: always

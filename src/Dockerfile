@@ -1,4 +1,4 @@
-# Use uma versão específica da imagem base para o estágio de construção
+# Imagem base para o estágio de construção
 FROM node:14-alpine AS builder
 
 # Defina o diretório de trabalho
@@ -14,6 +14,9 @@ COPY . .
 
 # Compile seu aplicativo, se necessário
 RUN npm run build
+
+
+
 
 # Etapa de construção final
 FROM node:14-alpine
