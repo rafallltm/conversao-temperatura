@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversao-temperatura-deployment
+  namespace: conversao-temperatura
+  labels:
+    app: conversao-temperatura
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: conversao-temperatura
+  template:
+    metadata:
+      labels:
+        app: conversao-temperatura
+    spec:
+      containers:
+      - name: conversao-temperatura
+        image: rafallltm/conversao-temperatura:v5
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: conversao-temperatura-service
+  namespace: conversao-temperatura
+spec:
+  selector:
+    app: conversao-temperatura
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer    
