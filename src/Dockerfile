@@ -1,6 +1,8 @@
 FROM node:23-alpine
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 COPY . .
-RUN nmp install
+USER node
 EXPOSE 8080
-CMD ["node", "/app/server.js"]
+CMD ["node", "server.js"]
