@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: conversao-temperatura.pum
+    - host: kubetemp.pum
       http:
         paths:
           - path: /
