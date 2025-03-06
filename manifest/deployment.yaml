@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: conversao-temperatura
-        image: rafallltm/conversao-temperatura:v5
+        image: rafallltm/conversao-temperatura:1.1
         ports:
         - containerPort: 8080
         resources:
@@ -27,6 +27,18 @@ spec:
           limits:
             cpu: 250m
             memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 20
 
 ---
 
@@ -35,6 +47,8 @@ kind: Service
 metadata:
   name: conversao-temperatura-service
   namespace: conversao-temperatura
+  labels:
+    app: conversao-temperatura
 spec:
   selector:
     app: conversao-temperatura
@@ -42,4 +56,26 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: ClusterIP    
+      name: http
+  type: ClusterIP
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: conversao-temperatura-service-monitor
+  namespace: monitoring
+  labels:
+    release: kube-prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - conversao-temperatura
+  selector:
+    matchLabels:
+      app: conversao-temperatura
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
