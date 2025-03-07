@@ -5,3 +5,6 @@ O projeto conversão de temperatura é um projeto desenvolvido em NodeJS. O proj
 
 ### Observações do projeto
 A aplicação é exposta usando a porta 8080
+
+### doc:
+https://chatgpt.com/share/67cb48a0-2c18-8010-8b40-586b722ab1c7
